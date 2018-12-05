@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test
 
 class Day02Test {
 
-    val day02 = Resources.linesFrom("day02.txt")
+    private val day02 = Resources.linesFrom("day02.txt")
 
     @Test
     fun `example of checksum`() {
@@ -17,5 +17,14 @@ class Day02Test {
         val checksum: Int = Day02.checksum(day02)
 
         assertThat(checksum).isEqualTo(7350)
+    }
+
+    @Test
+    fun `example of common letter of correct box IDs`() {
+        val commonLetters: String = Day02.commonLettersOfCorrectBoxIds(
+            listOf("abcde", "fghij", "klmno", "pqrst", "fguij", "axcye", "wvxyz")
+        )
+
+        assertThat(commonLetters).isEqualTo("fgij")
     }
 }
