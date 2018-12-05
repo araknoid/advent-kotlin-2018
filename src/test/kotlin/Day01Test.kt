@@ -25,4 +25,11 @@ class Day01Test {
 
         assertThat(frequency).isEqualTo(1)
     }
+
+    @Test
+    fun `answer part 2`() {
+        val sum = Day01.frequencyRepeatedTwice(day01)
+
+        assertThat(sum).isEqualTo(77271)
+    }
 }
