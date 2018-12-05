@@ -27,4 +27,11 @@ class Day02Test {
 
         assertThat(commonLetters).isEqualTo("fgij")
     }
+
+    @Test
+    fun `answer part 2`() {
+        val commonLetters: String = Day02.commonLettersOfCorrectBoxIds(day02)
+
+        assertThat(commonLetters).isEqualTo("wmlnjevbfodamyiqpucrhsukg")
+    }
 }
