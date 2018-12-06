@@ -15,4 +15,13 @@ class Day03Test {
 
         assertThat(overlappingFabrics).isEqualTo(4)
     }
+
+    @Test
+    fun `part 1 answer`() {
+        val claims = Resources.linesFrom("day03.txt")
+
+        val overlappingFabrics = Day03.overlappingFabrics(claims)
+
+        assertThat(overlappingFabrics).isEqualTo(117948)
+    }
 }
