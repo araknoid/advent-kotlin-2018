@@ -24,4 +24,17 @@ class Day03Test {
 
         assertThat(overlappingFabrics).isEqualTo(117948)
     }
+
+    @Test
+    fun `claim without overlapping fabrics`() {
+        val claims = listOf(
+            "#1 @ 1,3: 4x4",
+            "#2 @ 3,1: 4x4",
+            "#3 @ 5,5: 2x2"
+        )
+
+        val claim = Day03.claimWithoutOverlappingFabrics(claims)
+
+        assertThat(claim).isEqualTo("#3 @ 5,5: 2x2")
+    }
 }
