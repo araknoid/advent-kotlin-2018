@@ -3,6 +3,8 @@ import org.junit.jupiter.api.Test
 
 class Day03Test {
 
+    private val day03Claims = Resources.linesFrom("day03.txt")
+
     @Test
     fun `claims of overlapping fabrics`() {
         val claims = listOf(
@@ -18,9 +20,7 @@ class Day03Test {
 
     @Test
     fun `part 1 answer`() {
-        val claims = Resources.linesFrom("day03.txt")
-
-        val overlappingFabrics = Day03.overlappingFabrics(claims)
+        val overlappingFabrics = Day03.overlappingFabrics(day03Claims)
 
         assertThat(overlappingFabrics).isEqualTo(117948)
     }
@@ -36,5 +36,12 @@ class Day03Test {
         val claim = Day03.claimWithoutOverlappingFabrics(claims)
 
         assertThat(claim).isEqualTo("#3 @ 5,5: 2x2")
+    }
+
+    @Test
+    fun `part 2 answer`() {
+        val claim = Day03.claimWithoutOverlappingFabrics(day03Claims)
+
+        assertThat(claim).isEqualTo("#567 @ 370,732: 23x19")
     }
 }
