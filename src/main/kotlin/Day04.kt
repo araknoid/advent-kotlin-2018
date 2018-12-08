@@ -52,6 +52,54 @@ class Day04 {
             return (mostAsleepGuard?.key ?: 0) * (mostAsleepMinute ?: 0)
 
         }
+
+        fun solvePart2(shifts: List<String>): Int {
+            val startShift = """\[\d\d\d\d-\d\d-\d\d \d\d:\d\d] Guard #(\d+) begins shift""".toRegex()
+            val sleep = """\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d)] falls asleep""".toRegex()
+            val wakeUp = """\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d)] wakes up""".toRegex()
+            val timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+
+            var id = 0
+            var startSleep: LocalDateTime = LocalDateTime.now()
+
+            val sleepsList = mutableListOf<Shift>()
+
+            for (shift in shifts.sorted()) {
+                when {
+                    shift matches startShift -> {
+                        startShift.find(shift)?.let {
+                            val (agentId) = it.destructured
+                            id = agentId.toInt()
+                        }
+                    }
+                    shift matches sleep -> {
+                        sleep.find(shift)?.let {
+                            val (timestamp) = it.destructured
+                            startSleep = LocalDateTime.parse(timestamp, timestampFormatter)
+                        }
+                    }
+                    shift matches wakeUp -> {
+                        wakeUp.find(shift)?.let {
+                            val (timestamp) = it.destructured
+                            sleepsList.add(Shift(id, startSleep, LocalDateTime.parse(timestamp, timestampFormatter)))
+                        }
+                    }
+                    else -> throw IllegalArgumentException("")
+                }
+            }
+
+            val mostAsleepGuard = sleepsList.groupBy(Shift::id)
+                .mapValues {
+                    it.value
+                        .flatMap { x -> x.minutesAsleep() }
+                        .groupBy { i -> i }
+                        .maxBy { p -> p.value.size }
+                }
+                .maxBy { it.value?.value?.size ?: 0 }
+
+
+            return (mostAsleepGuard?.key ?: 0) * (mostAsleepGuard?.value?.key ?: 0)
+        }
     }
 }
 
