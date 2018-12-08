@@ -15,7 +15,7 @@ class Day04 {
 
             val sleepsList = mutableListOf<Shift>()
 
-            for (shift in shifts) {
+            for (shift in shifts.sorted()) {
                 when {
                     shift matches startShift -> {
                         startShift.find(shift)?.let {

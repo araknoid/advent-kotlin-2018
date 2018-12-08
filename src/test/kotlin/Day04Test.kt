@@ -30,4 +30,14 @@ class Day04Test {
         assertThat(id).isEqualTo(240)
 
     }
+
+    @Test
+    fun `answer part 1`() {
+        val shifts = Resources.linesFrom("day04.txt")
+
+        val id = Day04.solvePart1(shifts)
+
+        assertThat(id).isEqualTo(39584)
+
+    }
 }
