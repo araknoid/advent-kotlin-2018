@@ -1,111 +1,64 @@
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
-
 class Day04 {
+
     companion object {
-        fun solvePart1(shifts: List<String>): Int? {
-            val startShift = """\[\d\d\d\d-\d\d-\d\d \d\d:\d\d] Guard #(\d+) begins shift""".toRegex()
-            val sleep = """\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d)] falls asleep""".toRegex()
-            val wakeUp = """\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d)] wakes up""".toRegex()
-            val timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
-            var id = 0
-            var startSleep: LocalDateTime = LocalDateTime.now()
+        private val startShift = """\[\d\d\d\d-\d\d-\d\d \d\d:\d\d] Guard #(\d+) begins shift""".toRegex()
+        private val sleep = """\[\d\d\d\d-\d\d-\d\d \d\d:(\d\d)] falls asleep""".toRegex()
+        private val wakeUp = """\[\d\d\d\d-\d\d-\d\d \d\d:(\d\d)] wakes up""".toRegex()
 
-            val sleepsList = mutableListOf<Shift>()
+        fun solvePart1(shifts: List<String>): Int {
 
-            for (shift in shifts.sorted()) {
-                when {
-                    shift matches startShift -> {
-                        startShift.find(shift)?.let {
-                            val (agentId) = it.destructured
-                            id = agentId.toInt()
-                        }
-                    }
-                    shift matches sleep -> {
-                        sleep.find(shift)?.let {
-                            val (timestamp) = it.destructured
-                            startSleep = LocalDateTime.parse(timestamp, timestampFormatter)
-                        }
-                    }
-                    shift matches wakeUp -> {
-                        wakeUp.find(shift)?.let {
-                            val (timestamp) = it.destructured
-                            sleepsList.add(Shift(id, startSleep, LocalDateTime.parse(timestamp, timestampFormatter)))
-                        }
-                    }
-                    else -> throw IllegalArgumentException("")
-                }
-            }
+            val mostAsleepGuard = shifts.asShiftList()
+                .groupBy(Shift::id)
+                .maxBy { it.value.sumBy(Shift::sleepTime) }
 
-            val mostAsleepGuard = sleepsList.groupBy(Shift::id)
-                .maxBy { it.value.sumBy { x -> x.sleepTime() } }
+            val mostAsleepMinute = mostAsleepGuard!!.value
+                .flatMap { it.minutesAsleep() }
+                .groupBy { it }
+                .maxBy { it.value.size }!!.key
 
-
-            val mostAsleepMinute = mostAsleepGuard?.value
-                ?.flatMap { it.minutesAsleep() }
-                ?.groupBy { it }
-                ?.maxBy { it.value.size }
-                ?.key
-
-            return (mostAsleepGuard?.key ?: 0) * (mostAsleepMinute ?: 0)
-
+            return mostAsleepGuard.key * mostAsleepMinute
         }
 
         fun solvePart2(shifts: List<String>): Int {
-            val startShift = """\[\d\d\d\d-\d\d-\d\d \d\d:\d\d] Guard #(\d+) begins shift""".toRegex()
-            val sleep = """\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d)] falls asleep""".toRegex()
-            val wakeUp = """\[(\d\d\d\d-\d\d-\d\d \d\d:\d\d)] wakes up""".toRegex()
-            val timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
-            var id = 0
-            var startSleep: LocalDateTime = LocalDateTime.now()
+            val mostAsleepGuardAtAMinute = shifts.asShiftList()
+                .groupBy(Shift::id)
+                .mapValues { shift ->
+                    shift.value
+                        .flatMap(Shift::minutesAsleep)
+                        .groupBy { it }
+                        .maxBy { minutes -> minutes.value.size }
+                }
+                .maxBy { it.value!!.value.size }
+
+            return mostAsleepGuardAtAMinute!!.key * mostAsleepGuardAtAMinute.value!!.key
+        }
+
+        private fun List<String>.asShiftList(): List<Shift> {
+            var guard = 0
+            var sleepStart = 0
 
             val sleepsList = mutableListOf<Shift>()
 
-            for (shift in shifts.sorted()) {
+            for (shift in this.sorted()) {
                 when {
-                    shift matches startShift -> {
-                        startShift.find(shift)?.let {
-                            val (agentId) = it.destructured
-                            id = agentId.toInt()
-                        }
-                    }
-                    shift matches sleep -> {
-                        sleep.find(shift)?.let {
-                            val (timestamp) = it.destructured
-                            startSleep = LocalDateTime.parse(timestamp, timestampFormatter)
-                        }
-                    }
-                    shift matches wakeUp -> {
-                        wakeUp.find(shift)?.let {
-                            val (timestamp) = it.destructured
-                            sleepsList.add(Shift(id, startSleep, LocalDateTime.parse(timestamp, timestampFormatter)))
-                        }
-                    }
-                    else -> throw IllegalArgumentException("")
+                    shift matches startShift -> guard = startShift.first(shift)
+                    shift matches sleep -> sleepStart = sleep.first(shift)
+                    else -> sleepsList.add(Shift(guard, sleepStart, wakeUp.first(shift)))
                 }
             }
 
-            val mostAsleepGuard = sleepsList.groupBy(Shift::id)
-                .mapValues {
-                    it.value
-                        .flatMap { x -> x.minutesAsleep() }
-                        .groupBy { i -> i }
-                        .maxBy { p -> p.value.size }
-                }
-                .maxBy { it.value?.value?.size ?: 0 }
-
-
-            return (mostAsleepGuard?.key ?: 0) * (mostAsleepGuard?.value?.key ?: 0)
+            return sleepsList
         }
+
+        private fun Regex.first(from: String) = this.find(from)!!.destructured.component1().toInt()
     }
 }
 
-data class Shift(val id: Int, val startSleep: LocalDateTime, val wakesUp: LocalDateTime) {
+data class Shift(val id: Int, val sleepStart: Int, val sleepEnd: Int) {
 
-    fun sleepTime() = startSleep.until(wakesUp, ChronoUnit.MINUTES).toInt()
+    fun sleepTime() = sleepEnd - sleepStart
 
-    fun minutesAsleep() = (startSleep.minute until wakesUp.minute).toList()
+    fun minutesAsleep() = (sleepStart until sleepEnd).toList()
 }
