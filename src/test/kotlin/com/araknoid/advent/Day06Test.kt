@@ -27,7 +27,7 @@ class Day06Test {
 
         val area = Day06.solvePart1(coordinates)
 
-        assertThat(area).isEqualTo(1)
+        assertThat(area).isEqualTo(3871)
     }
 
 
@@ -45,5 +45,14 @@ class Day06Test {
         val area = Day06.solvePart2(coordinates, 32)
 
         assertThat(area).isEqualTo(16)
+    }
+
+    @Test
+    fun `answer part 2`() {
+        val coordinates = Resources.linesFrom("day06.txt")
+
+        val area = Day06.solvePart2(coordinates, 10000)
+
+        assertThat(area).isEqualTo(44667)
     }
 }
