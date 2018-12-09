@@ -1,3 +1,8 @@
+/**
+ * Day 2: Inventory Management System
+ *
+ * Description: http://adventofcode.com/2018/day/2
+ */
 class Day02 {
     companion object {
         fun checksum(boxes: List<String>): Int =

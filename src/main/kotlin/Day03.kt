@@ -1,3 +1,8 @@
+/**
+ * Day 3: No Matter How You Slice It
+ *
+ * Description: http://adventofcode.com/2018/day/3
+ */
 class Day03 {
     companion object {
         fun overlappingFabrics(claims: List<String>): Int =

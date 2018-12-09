@@ -1,3 +1,8 @@
+/**
+ * Day 4: Repose Record
+ *
+ * Description: http://adventofcode.com/2018/day/4
+ */
 class Day04 {
 
     companion object {

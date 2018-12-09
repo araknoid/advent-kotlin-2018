@@ -1,3 +1,8 @@
+/**
+ * Day 1: Chronal Calibration
+ *
+ * Description: http://adventofcode.com/2018/day/1
+ */
 class Day01 {
 
     companion object {
