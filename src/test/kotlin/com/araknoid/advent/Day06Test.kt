@@ -29,4 +29,21 @@ class Day06Test {
 
         assertThat(area).isEqualTo(1)
     }
+
+
+    @Test
+    fun `example of part 2`() {
+        val coordinates = listOf(
+            "1, 1",
+            "1, 6",
+            "8, 3",
+            "3, 4",
+            "5, 5",
+            "8, 9"
+        )
+
+        val area = Day06.solvePart2(coordinates, 32)
+
+        assertThat(area).isEqualTo(16)
+    }
 }
