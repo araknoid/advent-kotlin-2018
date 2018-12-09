@@ -1,3 +1,5 @@
+package com.araknoid.advent
+
 /**
  * Day 4: Repose Record
  *
@@ -50,7 +52,13 @@ class Day04 {
                 when {
                     shift matches startShift -> guard = startShift.first(shift)
                     shift matches sleep -> sleepStart = sleep.first(shift)
-                    else -> sleepsList.add(Shift(guard, sleepStart, wakeUp.first(shift)))
+                    else -> sleepsList.add(
+                        Shift(
+                            guard,
+                            sleepStart,
+                            wakeUp.first(shift)
+                        )
+                    )
                 }
             }
 

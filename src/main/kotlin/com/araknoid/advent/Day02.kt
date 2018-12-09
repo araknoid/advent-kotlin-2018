@@ -1,3 +1,5 @@
+package com.araknoid.advent
+
 /**
  * Day 2: Inventory Management System
  *

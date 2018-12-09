@@ -1,3 +1,5 @@
+package com.araknoid.advent
+
 /**
  * Day 3: No Matter How You Slice It
  *
