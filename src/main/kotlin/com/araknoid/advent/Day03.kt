@@ -1,5 +1,7 @@
 package com.araknoid.advent
 
+import kotlin.math.abs
+
 /**
  * Day 3: No Matter How You Slice It
  *
@@ -31,7 +33,13 @@ class Day03 {
 }
 
 
-data class Position(val x: Int, val y: Int)
+data class Position(val x: Int, val y: Int) {
+
+    fun distanceTo(x: Int, y: Int): Int = abs(this.x - x) + abs(this.y - y)
+
+    fun isEdge(xRange: IntRange, yRange: IntRange): Boolean =
+        x == xRange.first || x == xRange.last || y == yRange.first || y == yRange.last
+}
 
 data class Claim(val code: String) {
     private val x: Int
