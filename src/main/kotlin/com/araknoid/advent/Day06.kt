@@ -19,6 +19,10 @@ class Day06 {
             val xRange = positions.minBy { it.x }!!.x..positions.maxBy { it.x }!!.x
             val yRange = positions.minBy { it.y }!!.y..positions.maxBy { it.y }!!.y
 
+            fun isEdge(x: Int, y: Int) = x == xRange.first || x == xRange.last || y == yRange.first || y == yRange.last
+
+            val edgePoints = mutableSetOf<Position>()
+
             return xRange.asSequence()
                 .flatMap { x ->
                     yRange.asSequence()
@@ -28,13 +32,18 @@ class Day06 {
                                     .sortedBy { it.second }
                                     .take(2)
 
+                            if (isEdge(x, y)) {
+                                edgePoints.add(closest[0].first)
+                            }
+
                             closest[0].first.takeUnless { closest[0].second == closest[1].second }
                         }
                 }
-                .filterNot { it?.isEdge(xRange, yRange) ?: false }
+                .filterNotNull().toList()
+                .filterNot { it in edgePoints }
                 .groupBy { it }
-                .mapValues { it.value.size }
-                .maxBy { it.value }!!.value
+                .map { it.key to it.value.size }
+                .maxBy { it.second }!!.second
         }
     }
 }

@@ -20,4 +20,13 @@ class Day06Test {
 
         assertThat(area).isEqualTo(17)
     }
+
+    @Test
+    fun `answer part 1`() {
+        val coordinates = Resources.linesFrom("day06.txt")
+
+        val area = Day06.solvePart1(coordinates)
+
+        assertThat(area).isEqualTo(1)
+    }
 }
