@@ -1,3 +1,8 @@
+/**
+ * Day 5: Alchemical Reduction
+ *
+ * Description: http://adventofcode.com/2018/day/5
+ */
 class Day05 {
 
     companion object {
@@ -22,6 +27,18 @@ class Day05 {
             } while (tmpPolymer.length != reactedPolymer.length)
 
             return reactedPolymer.length
+        }
+
+        fun solvePart2(polymer: String): Int {
+
+            val subPolymers = mutableListOf<String>()
+
+            polymer.toUpperCase()
+                .toCharArray()
+                .distinct()
+                .forEach { subPolymers.add(polymer.replace(it.toString(), "", ignoreCase = true)) }
+
+            return subPolymers.map { solvePart1(it) }.min()!!
         }
     }
 }

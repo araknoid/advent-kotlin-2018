@@ -20,4 +20,22 @@ class Day05Test {
 
         assertThat(unit).isEqualTo(9348)
     }
+
+    @Test
+    fun `example part 2`() {
+        val polymer = "dabAcCaCBAcCcaDA"
+
+        val unit = Day05.solvePart2(polymer)
+
+        assertThat(unit).isEqualTo(4)
+    }
+
+    @Test
+    fun `solve part 2`() {
+        val polymer = Resources.from("day05.txt")
+
+        val unit = Day05.solvePart2(polymer)
+
+        assertThat(unit).isEqualTo(4996)
+    }
 }
